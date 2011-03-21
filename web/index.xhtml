@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:p="http://primefaces.prime.com.tr/ui"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Aplicação de Teste - JSF2</title>
+		<h:outputStylesheet library="styles" name="style.css"/>
+		<h:outputScript library="scripts" name="functions.js"/>
+    </h:head>
+    <h:body>
+		<p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/>
+        <p:dialog closable="false" draggable="false" modal="true" header="Status" widgetVar="statusDialog">
+            <p:graphicImage value="http://primefaces.org/showcase/design/ajaxloadingbar.gif" />
+        </p:dialog>
+		<h:form>
+			<p:menubar id="mainmenu" autoSubmenuDisplay="true" effectDuration="0">
+				<p:menuitem ajax="false" value="Home" onclick="statusDialog.show();" icon="ui-icon ui-icon-home">
+					<f:setPropertyActionListener target="#{authenticator.currentPage}" value="index"/>
+				</p:menuitem>
+				<p:submenu label="Administração">
+					<p:menuitem ajax="false" value="Categorias" onclick="statusDialog.show();">
+						<f:setPropertyActionListener target="#{authenticator.currentPage}" value="categorias"/>
+					</p:menuitem>
+					<p:menuitem ajax="false" value="Clientes" onclick="statusDialog.show();">
+						<f:setPropertyActionListener target="#{authenticator.currentPage}" value="clientes"/>
+					</p:menuitem>
+				</p:submenu>
+				<p:submenu label="#{authenticator.credentials.username}" icon="ui-icon ui-icon-gear">
+					<p:menuitem value="Tema" url="theme.xhtml" onclick="statusDialog.show();"/>
+					<p:separator/>
+					<p:menuitem value="Logout" ajax="false" immediate="true" action="#{authenticator.logout}" onclick="statusDialog.show();" icon="ui-icon ui-icon-locked"/>
+				</p:submenu>
+			</p:menubar>
+		</h:form>
+		<h:panelGroup id="contentPanel">
+			<p:growl />
+			<p:messages/>
+			<ui:include src="/pages/#{authenticator.currentPage}.xhtml"/>
+		</h:panelGroup>
+    </h:body>
+</html>

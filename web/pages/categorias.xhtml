@@ -1,0 +1,141 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:p="http://primefaces.prime.com.tr/ui"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:easyrad="http://java.sun.com/jsf/composite/easyrad">
+	<p:panel styleClass="panel">
+		<f:facet name="header"><h:outputText value="#{categoriasBean.panelHeader}"/></f:facet>
+		<f:facet name="footer"><h:outputText value="#{categoriasBean.panelFooter}" escape="false"/></f:facet>
+		<h:panelGroup rendered="#{categoriasBean.currentPanel eq categoriasBean.INDEXPANEL}">
+			<center>
+				<h:form id="indexForm">
+					<easyrad:indexToolbar currentBean="#{categoriasBean}" icons="#{icons}" labels="#{labels}"/>
+					<p>
+						<h:outputFormat value="#{labels.sizeMessage}">
+							<f:param value="#{categoriasBean.objectsSize}"/>
+						</h:outputFormat>
+						<h:outputText value=" | "/>
+						<h:outputLink id="lnkIndex" value="#">
+							<p:printer target="mainTable" />
+							<h:outputText value="#{labels.printButton}"/>
+						</h:outputLink>
+					</p>
+					<p:dataTable
+						id="mainTable"
+						widgetVar="mainTable"
+						styleClass="table"
+						value="#{categoriasBean.dataModel}"
+						lazy="#{categoriasBean.lazy}"
+						var="row"
+						rendered="#{categoriasBean.objectsSize gt 0}"
+						page="#{categoriasBean.page}"
+						paginator="true"
+						rows="#{categoriasBean.rows}"
+						paginatorAlwaysVisible="false"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15,20">
+
+						<p:column>
+							<f:facet name="header"><h:outputText value="Código"/></f:facet>
+							<h:outputText value="#{row.idCategoria}"/>
+						</p:column>
+						<p:column>
+							<f:facet name="header"><h:outputText value="Nome"/></f:facet>
+							<h:outputText value="#{row.nome}"/>
+						</p:column>
+						<p:column>
+							<f:facet name="header"><h:outputText value="Descrição"/></f:facet>
+							<h:outputText value="#{row.descricao}"/>
+						</p:column>
+						<p:column styleClass="buttonColumn">
+							<f:facet name="header"><h:outputText value="#{labels.actionHeader}"/></f:facet>
+							<p:commandButton update="contentPanel" title="#{labels.detailLink}" action="#{categoriasBean.detail}" image="#{icons.detail}"/>
+
+							<p:commandButton update="contentPanel" title="#{labels.editLink}" action="#{categoriasBean.edit}" image="#{icons.edit}"/>
+
+							<p:commandButton ajax="false" title="#{labels.deleteLink}" onclick="javascript: confirmation#{row.id}.show(); return false;" image="#{icons.delete}"/>
+							<p:confirmDialog draggable="false" modal="true" severity="alert" message="#{labels.deletePanelMessage} #{row.id}?" header="#{labels.deletePanelHeader}" widgetVar="confirmation#{row.id}">
+								<p:commandButton ajax="false" style="#{icons.mainButtonStyle}" value="#{labels.deleteLink}" action="#{categoriasBean.delete}" image="#{icons.delete}"/>
+								<p:commandButton value="Não" onclick="confirmation#{row.id}.hide()" type="button" image="#{icons.cancel}"/>
+							</p:confirmDialog>
+						</p:column>
+					</p:dataTable>
+				</h:form>
+			</center>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{categoriasBean.currentPanel eq categoriasBean.INSERTPANEL}">
+			<h:form id="insertForm">
+				<p:toolbar>
+
+					<p:toolbarGroup align="right">
+						<p:commandButton update="contentPanel" style="#{icons.mainButtonStyle}" value="#{labels.saveButton}" action="#{categoriasBean.save}" image="#{icons.save}"/>
+
+						<p:commandButton update="contentPanel" value="#{labels.cancelButton}" action="#{categoriasBean.previousPanel}" immediate="true" image="#{icons.cancel}"/>
+						<p:commandButton type="reset" value="#{labels.cleanButton}"/>
+						<p:hotkey bind="ESC" action="#{categoriasBean.previousPanel}" immediate="true" update="contentPanel"/>
+					</p:toolbarGroup>
+				</p:toolbar>
+				<h:panelGrid columns="2" styleClass="insertPanelGrid" columnClasses="labelInsertPanelGrid,inputInsertPanelGrid">
+					<h:outputLabel for="nome" value="NOME:"/>
+					<h:panelGroup>
+						<p:inputText id="nome" required="true" value="#{categoriasBean.object.nome}"/>
+						<p:message for="nome"/>
+					</h:panelGroup>
+					<h:outputLabel for="descricao" value="DESCRIÇÃO:"/>
+					<h:panelGroup>
+						<p:inputTextarea id="descricao" required="true" value="#{categoriasBean.object.descricao}"/>
+						<p:message for="descricao"/>
+					</h:panelGroup>
+				</h:panelGrid>
+				<p:toolbar>
+
+					<p:toolbarGroup align="right">
+						<p:commandButton update="contentPanel" style="#{icons.mainButtonStyle}" value="#{labels.saveButton}" action="#{categoriasBean.save}" image="#{icons.save}"/>
+
+						<p:commandButton update="contentPanel" value="#{labels.cancelButton}" action="#{categoriasBean.previousPanel}" immediate="true" image="#{icons.cancel}"/>
+						<p:commandButton type="reset" value="#{labels.cleanButton}"/>
+					</p:toolbarGroup>
+				</p:toolbar>
+			</h:form>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{categoriasBean.currentPanel eq categoriasBean.DETAILPANEL}">
+			<h:form id="detailForm">
+				<p:toolbar>
+
+					<p:toolbarGroup align="right">
+						<p:commandButton update="contentPanel" value="#{labels.backButton}" action="#{categoriasBean.cancel}" immediate="true" image="#{icons.cancel}"/>
+						<p:commandButton update="contentPanel" value="#{labels.editLink}" action="#{categoriasBean.edit}" image="#{icons.edit}"/>
+						<p:commandButton update="contentPanel" value="#{labels.deleteLink}" onclick="javascript: confirmationdetail.show(); return false;" image="#{icons.delete}"/>
+						<p:confirmDialog modal="true" draggable="false" severity="alert" message="#{labels.deletePanelMessage} #{categoriasBean.object.id}?" header="#{labels.deletePanelHeader}" widgetVar="confirmationdetail">
+							<p:commandButton ajax="false" value="#{msgs.deleteLink}" action="#{categoriasBean.delete}" image="#{icons.delete}"/>
+							<p:commandButton value="Não" onclick="confirmationdetail.hide()" type="button" image="#{icons.cancel}"/>
+						</p:confirmDialog>
+						<p:hotkey bind="ESC" action="#{categoriasBean.cancel}" immediate="true" update="contentPanel"/>
+					</p:toolbarGroup>
+				</p:toolbar>
+				<h:panelGrid columns="2" styleClass="detailPanelGrid" columnClasses="labelDetailPanelGrid, valueDetailPanelGrid">
+					<h:outputLabel for="detailID" value="ID: "/>
+					<h:outputText id="detailID" value="#{categoriasBean.object.id}"/>
+					<h:outputLabel for="detailNome" value="NOME: "/>
+					<h:outputText id="detailNome" value="#{categoriasBean.object.nome}"/>
+					<h:outputLabel for="detailDescricao" value="DESCRIÇÃO: "/>
+					<h:outputText id="detailDescricao" value="#{categoriasBean.object.descricao}"/>
+				</h:panelGrid>
+				<p:toolbar>
+
+					<p:toolbarGroup align="right">
+						<p:commandButton update="contentPanel" value="#{labels.backButton}" action="#{categoriasBean.cancel}" immediate="true" image="#{icons.cancel}"/>
+						<p:commandButton update="contentPanel" value="#{labels.editLink}" action="#{categoriasBean.edit}" image="#{icons.edit}"/>
+						<p:commandButton update="contentPanel" value="#{labels.deleteLink}" onclick="javascript: confirmationdetail.show(); return false;" image="#{icons.delete}"/>
+						<p:confirmDialog modal="true" draggable="false" severity="alert" message="#{labels.deletePanelMessage} #{categoriasBean.object.id}?" header="#{labels.deletePanelHeader}" widgetVar="confirmationdetail">
+							<p:commandButton ajax="false" value="#{msgs.deleteLink}" action="#{categoriasBean.delete}" image="#{icons.delete}"/>
+							<p:commandButton value="Não" onclick="confirmationdetail.hide()" type="button" image="#{icons.cancel}"/>
+						</p:confirmDialog>
+						<p:hotkey bind="ESC" action="#{categoriasBean.cancel}" immediate="true" update="contentPanel"/>
+					</p:toolbarGroup>
+				</p:toolbar>
+			</h:form>
+		</h:panelGroup>
+	</p:panel>
+</html>

@@ -1,0 +1,28 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:composite="http://java.sun.com/jsf/composite"
+	  xmlns:p="http://primefaces.prime.com.tr/ui">
+
+	<composite:interface>
+		<composite:attribute name="currentBean" required="true" type="utils.AbstractBean"/>
+		<composite:attribute name="labels" required="true"/>
+		<composite:attribute name="icons" required="true"/>
+	</composite:interface>
+
+	<composite:implementation>
+		<p:toolbar styleClass="toolbar">
+			<p:toolbarGroup align="right">
+
+				<p:commandButton update="contentPanel" value="#{labels.exportButton}" action="#{cc.attrs.currentBean.export}" image="#{icons.export}" style="#{cc.attrs.icons.mainButtonStyle}"/>
+
+				<p:commandButton update="contentPanel" value="#{labels.backButton}" action="#{cc.attrs.currentBean.cancel}" image="#{icons.back}" immediate="true"/>
+
+				<p:divider/>
+
+				<p:commandButton ajax="false" value="Select All" onclick="changeAll('exportForm', true); return false;"/>
+				<p:commandButton ajax="false" value="Unselect All" onclick="changeAll('exportForm', false); return false;"/>
+
+			</p:toolbarGroup>
+		</p:toolbar>
+	</composite:implementation>
+
+</html>

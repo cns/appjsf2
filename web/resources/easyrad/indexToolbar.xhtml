@@ -1,0 +1,26 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:composite="http://java.sun.com/jsf/composite"
+	  xmlns:p="http://primefaces.prime.com.tr/ui">
+
+	<composite:interface>
+		<composite:attribute name="currentBean" required="true" type="utils.AbstractBean"/>
+		<composite:attribute name="labels" required="true"/>
+		<composite:attribute name="icons" required="true"/>
+	</composite:interface>
+
+	<composite:implementation>
+		<p:toolbar styleClass="toolbar">
+			<p:toolbarGroup align="left">
+				<p:inputText id="searchKey" value="#{cc.attrs.currentBean.search}" />
+				<p:watermark for="searchKey" value="#{cc.attrs.labels.searchLabel}" />
+				<p:commandButton update="contentPanel" title="#{cc.attrs.labels.searchButton}" action="#{cc.attrs.currentBean.findResults}" image="#{cc.attrs.icons.search}"/>
+			</p:toolbarGroup>
+			<p:toolbarGroup align="right">
+				<p:commandButton update="contentPanel" value="#{cc.attrs.labels.insertButton}" title="#{cc.attrs.labels.insertButton}" action="#{cc.attrs.currentBean.insert}" image="#{cc.attrs.icons.insert}"/>
+				<p:commandButton ajax="false" value="#{cc.attrs.labels.exportButton}" title="#{cc.attrs.labels.exportButton}" action="#{cc.attrs.currentBean.exportTable}" image="#{cc.attrs.icons.export}"/>
+				<p:commandButton update="contentPanel" value="#{cc.attrs.labels.refreshButton}" title="#{cc.attrs.labels.refreshButton}" action="#{cc.attrs.currentBean.list}" image="#{cc.attrs.icons.refresh}"/>
+			</p:toolbarGroup>
+		</p:toolbar>
+	</composite:implementation>
+
+</html>

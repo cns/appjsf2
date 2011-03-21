@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:p="http://primefaces.prime.com.tr/ui"
+	  xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Login</title>
+		<h:outputStylesheet library="styles" name="style.css"/>
+    </h:head>
+    <h:body onload="dialog.show();">
+		<p:confirmDialog modal="true" zindex="20" header="Header" message="#{authenticator.message}" rendered="#{authenticator.showDialog}" widgetVar="dialog">
+			<p:commandButton ajax="false" value="Não" onclick="dialog.hide();" type="button" image="#{icons.delete}"/>
+			</p:confirmDialog>
+		<p:growl/>
+		<p:messages/>
+		<h:form>
+			
+			<p:focus for="username"/>
+			<p:panel styleClass="loginPanel">
+				<f:facet name="header">
+					<p:graphicImage url="ui-icon-locked"/>
+					<h:outputText value="#{labels.loginPanelHeader}"/>
+				</f:facet>
+				<h:panelGrid columns="2" styleClass="insertPanelGrid" columnClasses="labelInsertPanelGrid,inputInsertPanelGrid">
+					<h:outputLabel for="username" value="#{labels.usernameLabel} "/>
+					<h:inputText id="username" required="true" value="#{authenticator.credentials.username}"/>
+					<h:outputLabel for="password" value="#{labels.passwordLabel} "/>
+					<h:inputSecret id="password" required="true" value="#{authenticator.credentials.password}"/>
+					<p:commandButton  style="#{icons.mainButtonStyle}" ajax="false" value="#{labels.loginButton}" action="#{authenticator.authenticate}" image="ui-icon-unlocked"/>
+					<p:commandButton type="reset" value="#{labels.cleanButton}"/>
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+
+    </h:body>
+</html>

@@ -1,0 +1,234 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:p="http://primefaces.prime.com.tr/ui"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:easyrad="http://java.sun.com/jsf/composite/easyrad">
+	<p:panel id="contentInternalPanel" styleClass="panel">
+		<f:facet name="header"><h:outputText value="#{clientesBean.panelHeader}"/></f:facet>
+		<f:facet name="footer"><h:outputText value="#{clientesBean.panelFooter}" escape="false"/></f:facet>
+		<h:panelGroup rendered="#{clientesBean.currentPanel eq clientesBean.INDEXPANEL}">
+
+			<h:form id="indexForm">
+				<easyrad:indexToolbar currentBean="#{clientesBean}" icons="#{icons}" labels="#{labels}"/>
+				<center>
+					<p>
+						<h:outputFormat value="#{labels.sizeMessage}">
+							<f:param value="#{clientesBean.objectsSize}"/>
+						</h:outputFormat>
+						<h:outputText value=" | "/>
+						<h:outputLink id="lnkIndex" value="#">
+							<p:printer target="indexForm" />
+							<h:outputText value="#{labels.printButton}"/>
+						</h:outputLink>
+					</p>
+					<p:dataTable
+						id="mainTable"
+						widgetVar="mainTable"
+						styleClass="table"
+						value="#{clientesBean.dataModel}"
+						lazy="#{clientesBean.lazy}"
+						var="row"
+						rendered="#{clientesBean.objectsSize gt 0}"
+						page="#{clientesBean.page}"
+						rows="#{categoriasBean.rows}"
+						paginator="true"
+						paginatorAlwaysVisible="false"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15,20">
+						<p:column>
+							<f:facet name="header"><h:outputText value="Código"/></f:facet>
+							<h:outputText value="#{row.idCliente}"/>
+						</p:column>
+
+						<p:column>
+							<f:facet name="header"><h:outputText value="Nome"/></f:facet>
+							<h:outputText value="#{row.nome}"/>
+						</p:column>
+
+						<p:column>
+							<f:facet name="header"><h:outputText value="Descrição"/></f:facet>
+							<h:outputText value="#{row.aniversario}">
+								<f:convertDateTime pattern="dd/MM/yyyy"/>
+							</h:outputText>
+						</p:column>
+
+						<p:column styleClass="buttonColumn">
+							<f:facet name="header"><h:outputText value="#{labels.actionHeader}"/></f:facet>
+
+							<p:commandButton update="contentPanel" title="#{labels.detailLink}" action="#{clientesBean.detail}" image="#{icons.detail}">
+								<f:setPropertyActionListener target="#{clientesBean.object}" value="#{row}"/>
+							</p:commandButton>
+
+							<p:commandButton update="contentPanel" title="#{labels.editLink}" action="#{clientesBean.edit}" image="#{icons.edit}">
+								<f:setPropertyActionListener target="#{clientesBean.object}" value="#{row}"/>
+							</p:commandButton>
+
+							<p:commandButton update="contentPanel" title="#{labels.deleteLink}" onclick="javascript: return confirm('#{labels.deletePanelMessage} #{row.id}?');" image="#{icons.delete}" action="#{clientesBean.delete}">
+								<f:setPropertyActionListener target="#{clientesBean.object}" value="#{row}"/>
+							</p:commandButton>
+
+						</p:column>
+
+					</p:dataTable>
+
+				</center>
+			</h:form>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{clientesBean.currentPanel eq clientesBean.INSERTPANEL}">
+			<h:form id="insertForm">
+				<easyrad:insertToolbar currentBean="#{clientesBean}" icons="#{icons}" labels="#{labels}"/>
+
+				<h:panelGrid id="insertPanel" columns="2" styleClass="insertPanelGrid" columnClasses="labelInsertPanelGrid,inputInsertPanelGrid,labelInsertPanelGrid,inputInsertPanelGrid">
+
+					<h:outputLabel for="idCategoria" value="CATEGORIA:"/>
+					<h:panelGroup>
+						<h:selectOneMenu id="idCategoria" required="true" value="#{clientesBean.idCategoria}">
+							<f:selectItem itemValue="null" itemLabel="Selecione"/>
+							<f:selectItems value="#{categoriasBean.selectDataModel}" var="select" itemValue="#{select.idCategoria}" itemLabel="#{select.nome}"/>
+						</h:selectOneMenu>
+						<p:message for="idCategoria"/>
+					</h:panelGroup>
+
+					<h:outputLabel for="nome" value="NOME:"/>
+					<h:panelGroup>
+						<p:inputText id="nome" required="true" value="#{clientesBean.object.nome}"/>
+						<p:message for="nome"/>
+					</h:panelGroup>
+
+					<h:outputLabel for="cpf" value="CPF:"/>
+					<h:panelGroup>
+						<p:inputMask mask="99999999999" id="cpf" required="true" value="#{clientesBean.object.cpf}"/>
+						<p:message for="cpf"/>
+					</h:panelGroup>
+
+					<h:outputLabel for="aniversario" value="ANIVERSÁRIO:"/>
+					<h:panelGroup>
+						<p:calendar id="aniversario" required="false" value="#{clientesBean.object.aniversario}"/>
+						<p:message for="aniversario"/>
+					</h:panelGroup>
+
+					<h:outputLabel for="comentarios" value="COMENTÁRIOS:"/>
+					<h:panelGroup>
+						<p:inputTextarea id="comentarios" required="false" value="#{clientesBean.object.comentarios}"/>
+						<p:message for="comentarios"/>
+					</h:panelGroup>
+
+					<h:outputLabel for="tipo" value="TIPO:"/>
+					<h:panelGroup>
+						<p:inputText id="tipo" required="true" value="#{clientesBean.object.tipo}"/>
+						<p:message for="tipo"/>
+					</h:panelGroup>
+
+					<h:outputLabel for="numeroAcessos" value="NÚMERO DE ACESSOS:"/>
+					<h:panelGroup>
+						<p:inputText id="numeroAcessos" required="true" value="#{clientesBean.object.numeroAcessos}"/>
+						<p:message for="numeroAcessos"/>
+					</h:panelGroup>
+
+					<h:outputLabel for="ativo" value="ATIVO:"/>
+					<h:panelGroup>
+						<h:selectOneRadio id="ativo" value="#{clientesBean.object.ativo}">
+							<f:selectItem itemValue="true" itemLabel="SIM"/>
+							<f:selectItem itemValue="false" itemLabel="NÃO"/>
+						</h:selectOneRadio>
+						<p:message for="ativo"/>
+					</h:panelGroup>
+
+				</h:panelGrid>
+				<h:outputLink id="lnkPrintInsertBottom" value="#">
+					<p:printer target="insertForm" />
+					<p:graphicImage value="/images/print.png" />
+					<h:outputText value="#{labels.printButton}"/>
+				</h:outputLink>
+				<easyrad:insertToolbar currentBean="#{clientesBean}" icons="#{icons}" labels="#{labels}"/>
+
+			</h:form>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{clientesBean.currentPanel eq clientesBean.DETAILPANEL}">
+			<h:form id="detailForm">
+
+
+				<easyrad:detailToolbar currentBean="#{clientesBean}" icons="#{icons}" labels="#{labels}"/>
+
+				<h:outputLink id="lnkDetailTop" value="#">
+					<p:printer target="detailForm" />
+					<p:graphicImage value="/images/print.png" />
+					<h:outputText value="#{labels.printButton}"/>
+				</h:outputLink>
+
+				<p:fieldset legend="Cliente" toggleable="true">
+					<h:panelGrid columns="2" styleClass="detailPanelGrid" columnClasses="labelDetailPanelGrid, valueDetailPanelGrid">
+
+						<h:outputLabel for="nomed" value="NOME: "/>
+						<h:outputText id="nomed" value="#{clientesBean.object.nome}"/>
+
+						<h:outputLabel for="idCliented" value="ID CLIENTE: "/>
+						<h:outputText id="idCliented" value="#{clientesBean.object.idCliente}"/>
+
+						<h:outputLabel for="idCategoriad" value="ID CATEGORIA: "/>
+						<h:outputText id="idCategoriad" value="#{clientesBean.object.idCategoria.nome}"/>
+
+						<h:outputLabel for="cpfd" value="CPF: "/>
+						<h:outputText id="cpfd" value="#{clientesBean.object.cpf}"/>
+
+						<h:outputLabel for="dataCadastrod" value="DATA DE CADASTRO: "/>
+						<h:outputText id="dataCadastrod" value="#{clientesBean.object.dataCadastro}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"/>
+						</h:outputText>
+
+						<h:outputLabel for="comentariosd" value="COMENTÁRIOS: "/>
+						<h:outputText id="comentariosd" value="#{clientesBean.object.comentarios}"/>
+
+						<h:outputLabel for="aniversariod" value="ANIVERSÁRIO: "/>
+						<h:outputText id="aniversariod" value="#{clientesBean.object.aniversario}">
+							<f:convertDateTime pattern="dd/MM/yyyy"/>
+						</h:outputText>
+
+						<h:outputLabel for="tipod" value="TIPO: "/>
+						<h:outputText id="tipod" value="#{clientesBean.object.tipo}"/>
+
+						<h:outputLabel for="numeroAcessosd" value="NÚMERO DE ACESSOS: "/>
+						<h:outputText id="numeroAcessosd" value="#{clientesBean.object.numeroAcessos}"/>
+
+						<h:outputLabel for="ativod" value="ATIVO: "/>
+						<h:outputText id="ativod" value="#{clientesBean.object.ativo}"/>
+
+					</h:panelGrid>
+				</p:fieldset>
+				<p:fieldset collapsed="true" styleClass="fieldsetRelationship" legend="Categoria" toggleable="true">
+					<h:panelGrid columns="2" styleClass="detailPanelGrid" columnClasses="labelDetailPanelGrid, valueDetailPanelGrid">
+						<h:outputText value="ID: "/>
+						<h:outputText value="#{clientesBean.object.idCategoria.idCategoria}"/>
+						<h:outputText value="NOME: "/>
+						<h:outputText value="#{clientesBean.object.idCategoria.nome}"/>
+						<h:outputText value="DESCRIÇÃO: "/>
+						<h:outputText value="#{clientesBean.object.idCategoria.descricao}"/>
+					</h:panelGrid>
+				</p:fieldset>
+
+				<h:outputLink id="lnkDetailBottom" value="#">
+					<p:printer target="detailForm" />
+					<p:graphicImage value="/images/print.png" />
+					<h:outputText value="#{labels.printButton}"/>
+				</h:outputLink>
+				<easyrad:detailToolbar currentBean="#{clientesBean}" icons="#{icons}" labels="#{labels}"/>
+
+			</h:form>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{clientesBean.currentPanel eq clientesBean.EXPORTPANEL}">
+			<h:form id="exportForm">
+				<easyrad:exportToolbar currentBean="#{clientesBean}" icons="#{icons}" labels="#{labels}"/>
+				<h:panelGrid id="insertPanel" columns="2" styleClass="insertPanelGrid" columnClasses="labelInsertPanelGrid,inputInsertPanelGrid,labelInsertPanelGrid,inputInsertPanelGrid">
+					<h:outputLabel for="columns" value="Colunas: "/>
+					<h:selectManyCheckbox id="columns" layout="pageDirection" required="true" value="#{clientesBean.exportableColumns}">
+						<f:selectItems value="#{clientesBean.allExportableColumns}" var="row" itemLabel="#{row.label}" itemValue="#{row}"/>
+					</h:selectManyCheckbox>
+				</h:panelGrid>
+				<easyrad:exportToolbar currentBean="#{clientesBean}" icons="#{icons}" labels="#{labels}"/>
+			</h:form>
+		</h:panelGroup>
+
+	</p:panel>
+</html>

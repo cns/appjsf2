@@ -1,0 +1,25 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:composite="http://java.sun.com/jsf/composite"
+	  xmlns:p="http://primefaces.prime.com.tr/ui">
+
+	<composite:interface>
+		<composite:attribute name="currentBean" required="true" type="utils.AbstractBean"/>
+		<composite:attribute name="labels" required="true"/>
+		<composite:attribute name="icons" required="true"/>
+	</composite:interface>
+
+	<composite:implementation>
+		<p:toolbar styleClass="toolbar">
+			<p:toolbarGroup align="right">
+
+				<p:commandButton update="contentPanel" style="#{cc.attrs.icons.mainButtonStyle}" value="#{cc.attrs.labels.saveButton}" action="#{cc.attrs.currentBean.save}" image="#{cc.attrs.icons.save}"/>
+
+				<p:commandButton type="reset" value="#{cc.attrs.labels.cleanButton}"/>
+
+				<p:commandButton update="contentPanel" value="#{cc.attrs.labels.cancelButton}" action="#{cc.attrs.currentBean.previousPanel}" immediate="true" image="#{cc.attrs.icons.cancel}"/>
+
+			</p:toolbarGroup>
+		</p:toolbar>
+	</composite:implementation>
+
+</html>
